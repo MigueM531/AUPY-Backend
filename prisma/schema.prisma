@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum Category {
+  WEB
+  CRYPTO
+  FORENSICS
+  REVERSING
+  PWNING
+  MISC
+  OSINT
+  STEGANOGRAPHY
+}
+
+model User {
+  id          String       @id @default(uuid())
+  name        String
+  email       String       @unique
+  password    String
+  role        Role         @default(USER)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  submissions Submission[]
+
+  @@map("users")
+}
+
+model Challenge {
+  id          String       @id @default(uuid())
+  title       String
+  description String
+  writeup     String?
+  imageUrl    String?
+  flag        String
+  points      Int
+  difficulty  Difficulty
+  category    Category
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  submissions Submission[]
+
+  @@map("challenges")
+}
+
+model Submission {
+  id             String    @id @default(uuid())
+  flagSubmitted  String
+  isCorrect      Boolean
+  userId         String
+  challengeId    String
+  createdAt      DateTime  @default(now())
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  challenge Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+
+  @@map("submissions")
+}
