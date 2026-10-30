@@ -15,5 +15,4 @@ export interface Challenge {
   updatedAt: Date;
 }
 
-/** Challenge sin la flag secreta (para endpoints públicos). */
 export type PublicChallenge = Omit<Challenge, 'flag'>;

@@ -28,9 +28,7 @@ export interface UpdateChallengeDTO {
 export class ChallengeService {
   constructor(private readonly challengeRepo: IChallengeRepository) {}
 
-  /**
-   * Devuelve challenges paginados SIN la flag (público).
-   */
+
   async getAll(page: number, limit: number): Promise<PaginatedResult<PublicChallenge>> {
     const result = await this.challengeRepo.findAll({ page, limit });
 
@@ -39,9 +37,7 @@ export class ChallengeService {
     return { data: sanitized, pagination: result.pagination };
   }
 
-  /**
-   * Devuelve un challenge SIN la flag (público).
-   */
+
   async getById(id: string): Promise<PublicChallenge> {
     const challenge = await this.challengeRepo.findById(id);
     if (!challenge) {
@@ -66,7 +62,7 @@ export class ChallengeService {
   }
 
   async update(id: string, data: UpdateChallengeDTO): Promise<Challenge> {
-    // Verificar que existe
+
     const existing = await this.challengeRepo.findById(id);
     if (!existing) {
       throw Object.assign(new Error('Challenge no encontrado.'), { status: 404 });
